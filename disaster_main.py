@@ -5,11 +5,12 @@
 import numpy as napi # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
 # Input data files are available in the "../input/" directory.
 
-sample_submission = pd.read_csv("../input/nlp-getting-started/sample_submission.csv")
-test = pd.read_csv("../input/nlp-getting-started/test.csv")
-train = pd.read_csv("../input/nlp-getting-started/train.csv")
+sample_submission = pd.read_csv("sample_submission.csv")
+test = pd.read_csv("test.csv")
+train = pd.read_csv("train.csv")
 
 X = train.iloc[:, 1:-1]
 y = train["target"]
@@ -34,3 +35,10 @@ location_arr = napi.unique(location_arr)
 print(location_arr.size)
 LOCATION_ARRAY_SIZE = location_arr.size
 print(location_arr)
+
+# TODO: Build a dictionary on text
+sentences = X_train['text'].tolist()
+cv = CountVectorizer(min_df=0.01)
+X = cv.fit_transform(sentences).toarray(float)
+print(cv.vocabulary_)
+print(X[100])
