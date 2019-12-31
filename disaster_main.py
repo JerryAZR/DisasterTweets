@@ -18,6 +18,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_
 X.head()
 
 # keyword dictionary
+# Could instead use a CountVectorizer
 keyword_col = X_train["keyword"]
 keyword_not_null = keyword_col[keyword_col.notnull()]
 keyword_arr = keyword_not_null.values
@@ -42,20 +43,27 @@ Inputs: key -- keyword to convert (string)
 Returns: a feature vector (arrat of ints, 0 or 1)
 '''
 def keyword_to_vector(key, keyword_arr):
+    if pd.isna(key):
+        return napi.zeros(len(keyword_arr))
     feature_vect_bool = (keyword_arr == key)
     feature_vect = 1 * feature_vect_bool
     return feature_vect
-    
+
+# CountVectorizer Approach:
+# keywords = X_train['text'].tolist()
+# keyword_cv = CountVectorizer()
+# keyword_vect = keyword_cv.fit_transform(keywords).toarray(float)    
 # print(keyword_to_vector("ablaze", keyword_arr))
 
-# location dictionary
-location_arr = X_train["location"][X_train["location"].notnull()].values
-# location_arr = location_arr[location_arr.notnull()]
-print(location_arr.size)
-location_arr = napi.unique(location_arr)
-print(location_arr.size)
-LOCATION_ARRAY_SIZE = location_arr.size
-# print(location_arr)
+# Skip this part now (ignore location)
+# # location dictionary
+# location_arr = X_train["location"][X_train["location"].notnull()].values
+# # location_arr = location_arr[location_arr.notnull()]
+# print(location_arr.size)
+# location_arr = napi.unique(location_arr)
+# print(location_arr.size)
+# LOCATION_ARRAY_SIZE = location_arr.size
+# # print(location_arr)
 
 # TODO: Build a dictionary on text
 sentences = X_train['text'].tolist()
