@@ -18,8 +18,10 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_
 X.head()
 
 # keyword dictionary
-keyword_arr = X_train.iloc[:,0].values
-keyword_arr = keyword_arr[~pd.isna(keyword_arr)]
+keyword_col = X_train["keyword"]
+keyword_not_null = keyword_col[keyword_col.notnull()]
+keyword_arr = keyword_not_null.values
+# keyword_arr = keyword_arr[keyword_arr.notnull()]
 # print(keyword_arr.size)
 keyword_arr = napi.unique(keyword_arr)
 # print(keyword_arr.size)
@@ -47,8 +49,8 @@ def keyword_to_vector(key, keyword_arr):
 # print(keyword_to_vector("ablaze", keyword_arr))
 
 # location dictionary
-location_arr = X_train.iloc[:,1].values
-location_arr = location_arr[~pd.isna(location_arr)]
+location_arr = X_train["location"][X_train["location"].notnull()].values
+# location_arr = location_arr[location_arr.notnull()]
 print(location_arr.size)
 location_arr = napi.unique(location_arr)
 print(location_arr.size)
