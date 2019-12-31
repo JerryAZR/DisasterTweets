@@ -8,6 +8,7 @@ from sklearn.model_selection import train_test_split, cross_validate
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.svm import SVC
 from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
 # Input data files are available in the "../input/" directory.
 print("loading data")
 sample_submission = pd.read_csv("sample_submission.csv")
@@ -86,10 +87,23 @@ for tweet in sentences:
     word_count.append(len(tweet.split()))
 
 # Apply PCA if necessary
+print("Doing PCA...")
+pca = PCA(0.95)
+pca.fit(All_features)
+PCA(copy=True, iterated_power='auto', random_state=42, svd_solver='auto', tol=0.0)
+
+train_X_pca = pca.transform(All_features)
+print("n components: ", pca.n_components_)
+plt.figure()
+plt.plot(napi.cumsum(pca.explained_variance_ratio_))
+plt.title('Explained Variance')
+plt.xlabel('number of components')
+plt.ylabel('cumulative explained variance')
+plt.show()
 
 svm_C = 1.0
 svm_kernel = "rbf"
 svm_gamma = "scale" # "auto" or "scale"
 svm_1 = SVC(C=svm_C, kernel=svm_kernel, gamma=svm_gamma)
-score_1 = cross_validate(svm_1, All_features, y_train, cv=3, scoring="f1")
+score_1 = cross_validate(svm_1, train_X_pca, y_train, cv=3, scoring="f1")
 print(score_1)
