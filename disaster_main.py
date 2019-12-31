@@ -7,6 +7,7 @@ import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 from sklearn.model_selection import train_test_split, cross_validate
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.svm import SVC
+from sklearn.decomposition import PCA
 # Input data files are available in the "../input/" directory.
 print("loading data")
 sample_submission = pd.read_csv("sample_submission.csv")
@@ -78,6 +79,11 @@ print("length of text feature vector: ", len(cv.get_feature_names()))
 print(keyword_features.shape, text_features.shape)
 All_features = napi.concatenate((keyword_features, text_features), axis=1)
 print(All_features.shape)
+
+# word count
+word_count = []
+for tweet in sentences:
+    word_count.append(len(tweet.split()))
 
 # Apply PCA if necessary
 
