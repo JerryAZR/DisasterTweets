@@ -4,8 +4,9 @@
 print("program start")
 import numpy as napi # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_validate
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.svm import SVC
 # Input data files are available in the "../input/" directory.
 print("loading data")
 sample_submission = pd.read_csv("sample_submission.csv")
@@ -29,8 +30,7 @@ keyword_arr = napi.unique(keyword_arr)
 KEYWORD_ARRAY_SIZE = keyword_arr.size
 
 # TODO: Convert keywords to feature vectors
-keyword_features = pd.get_dummies(X_train.iloc[:,0])
-keyword_features.head()
+keyword_features = pd.get_dummies(X_train.iloc[:,0]).values
 # print("keyword_features shape: ", keyword_features.shape)
 print("length of keyword feature vector", KEYWORD_ARRAY_SIZE)  # 221
 
@@ -68,8 +68,22 @@ def keyword_to_vector(key, keyword_arr):
 # TODO: Build a dictionary on text
 sentences = X_train['text'].tolist()
 cv = CountVectorizer(min_df=0.0008)
-X = cv.fit_transform(sentences).toarray(float)
+text_features = cv.fit_transform(sentences).toarray(float)
 # print(len(sentences))
 # print(cv.vocabulary_)
-# print(X[100])
+# print(text_features[100])
 print("length of text feature vector: ", len(cv.get_feature_names()))
+
+# merge all the features:
+print(keyword_features.shape, text_features.shape)
+All_features = napi.concatenate((keyword_features, text_features), axis=1)
+print(All_features.shape)
+
+# Apply PCA if necessary
+
+svm_C = 1.0
+svm_kernel = "rbf"
+svm_gamma = "scale" # "auto" or "scale"
+svm_1 = SVC(C=svm_C, kernel=svm_kernel, gamma=svm_gamma)
+score_1 = cross_validate(svm_1, All_features, y_train, cv=3, scoring="f1")
+print(score_1)
