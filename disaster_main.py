@@ -10,7 +10,24 @@ from sklearn.svm import SVC
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 
+# stem tools
 from nltk.stem import PorterStemmer, LancasterStemmer
+from nltk.tokenize import sent_tokenize, word_tokenize
+def stemSentence(sentence):
+    token_words=word_tokenize(sentence)
+#     token_words
+    stem_sentence=[]
+    for word in token_words:
+        stem_sentence.append(porter.stem(word))
+        stem_sentence.append(" ")
+    return "".join(stem_sentence)
+
+def stemSentenceList(sentenceList):
+    return_list = []
+    for sentence in sentenceList:
+        return_list.append(stemSentence(sentence))
+    return return_list
+
 # Input data files are available in the "../input/" directory.
 print("loading data")
 sample_submission = pd.read_csv("sample_submission.csv")
