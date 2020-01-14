@@ -1,13 +1,14 @@
 # This Python 3 environment comes with many helpful analytics libraries installed
 # It is defined by the kaggle/python docker image: https://github.com/kaggle/docker-python
 # For example, here's several helpful packages to load in
-print("program start")
+print("program start!")
 import numpy as napi # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 from sklearn.model_selection import train_test_split, cross_validate
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.svm import SVC
 from sklearn.decomposition import PCA
+from sklearn.feature_extraction.text import TfidfVectorizer
 import matplotlib.pyplot as plt
 
 # stem tools
@@ -122,7 +123,8 @@ numerical_keyword_features = (napi.array(numerical_keyword_features)).reshape(-1
 
 # TODO: Build a dictionary on text
 sentences = X_train['text'].tolist()
-cv = CountVectorizer(min_df=0.0008)
+# cv = CountVectorizer(min_df=0.0008)
+cv = TfidfVectorizer(stop_words = "english",max_df = 0.3, min_df= 0.005)
 text_features = cv.fit_transform(sentences).toarray(float)
 # print(len(sentences))
 # print(cv.vocabulary_)
