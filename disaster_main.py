@@ -29,6 +29,23 @@ def stemSentenceList(sentenceList):
         return_list.append(stemSentence(sentence))
     return return_list
 
+def get_location_validity(X):
+    nlp = spacy.load("en_core_web_sm")
+    X_train_loc_valid = [] #ner tag
+    X_valid = [] #valid or not
+    # get ner tag
+    for x in X["location"]:
+        if pd.isnull(x):
+            x = "."
+        X_train_loc_valid.append(nlp(x))
+    # get valid or not
+    for i in X_train_loc_valid:
+        X_valid.append(0)
+        for ent in i.ents:
+            if ent.label_ == "GPE":
+                X_valid[-1] = 1
+    return X_valid
+    
 # Input data files are available in the "../input/" directory.
 print("loading data")
 sample_submission = pd.read_csv("sample_submission.csv")
